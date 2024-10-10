@@ -48,3 +48,14 @@ def schema():
     for site in mbp.list_sites():
         out[site] = pl.String
     return out
+
+def book_info():
+    """Return book info entries."""
+    return [
+        'isbn',
+        'author',
+        'title',
+        'year',
+        'publisher',
+        'full_price',
+    ]

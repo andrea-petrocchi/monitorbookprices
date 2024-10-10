@@ -1,6 +1,7 @@
 """init."""
 
 from .book.general import (
+    book_info,
     create_excel_template,
     fill_book_schema,
     new_book,
@@ -12,6 +13,7 @@ from .scrape.general import prepare_scrape, scrape_database, scrape_list
 from .scrape.sites import list_sites, list_sites_links, scrape_url
 
 __all__ = [
+    'book_info',
     'create_excel_template',
     'fill_book_schema',
     'list_sites',
