@@ -1,5 +1,8 @@
 # my files
-mio/
+personal/
+
+# examples files to ignore
+/examples/01_add_book/database.db
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
