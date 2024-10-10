@@ -19,6 +19,7 @@ dependencies = [
     "openpyxl",
     "pandas",
     "polars",
+    "pytest",
     "ruff",
     "SQLAlchemy",
     "xlsx2csv",
