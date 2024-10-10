@@ -1,0 +1,53 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "monitorbookprices"
+version = "0.0.1"
+description = "Monitor book prices for some italian, english, and german online bookshops."
+authors = [
+    {name = "Andrea Petrocchi", email = "andrea.petrocchi@mpsd.mpg.de"},
+]
+readme = "README.md"
+license = {file="LICENSE"}
+requires-python = ">=3.7"
+dependencies = [
+    "fastexcel",
+    "ipykernel",
+    "lxml",
+    "openpyxl",
+    "pandas",
+    "polars",
+    "ruff",
+    "SQLAlchemy",
+    "xlsx2csv",
+    "xlsxwriter",
+]
+
+[project.urls]
+Source = "https://github.com/andrea-petrocchi/monitorbookprices"
+Issues = "https://github.com/andrea-petrocchi/monitorbookprices/issues"
+
+[tool.ruff]
+target-version = "py37"
+line-length = 79
+indent-width = 4
+respect-gitignore = true
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "W", "C90", "I", "D", "S"]
+ignore = ["D105", "D106", "D107"]
+
+[tool.ruff.lint.per-file-ignores]
+"**/__init__.py" = ["D104"] # Missing docstring in public package
+"tests/*" = ["S101"] # Use of `assert` detected
+
+[tool.ruff.lint.pycodestyle]
+max-doc-length = 79
+
+[tool.ruff.lint.pydocstyle]
+convention = "pep257"
+
+[tool.ruff.format]
+quote-style = "single"
