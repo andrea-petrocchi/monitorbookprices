@@ -111,7 +111,7 @@ def write_database(
 
 
 def delete_known_books(
-    new_books,
+    df,
     df_db=None,
     table_name='books',
     engine=None,
@@ -124,7 +124,7 @@ def delete_known_books(
             engine=engine,
             url=url,
         )
-    return new_books.join(
+    return df.join(
         df_db,
         on='isbn',
         how='anti',
