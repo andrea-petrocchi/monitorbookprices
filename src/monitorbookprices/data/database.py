@@ -3,12 +3,15 @@
 import polars as pl
 from sqlalchemy import create_engine
 
+from monitorbookprices.book.general import schema as get_schema_default
+
 
 def read_database(
-    table_name,
     engine=None,
+    query=None,
+    schema=get_schema_default(),
+    table_name=None,
     url=None,
-    schema_overrides=None,
 ):
     """Read database.
 
@@ -18,14 +21,12 @@ def read_database(
 
     Parameters
     ----------
-    table_name: str
-        Name of table to be read from database.
     engine: :class:`sqlalchemy.engine.Engine`, optional
         Engine object providing the connection to the database.
+    schema: dict, optional.
+        Override schema with dictionary of column : `polars` type.
     url: str, optional
         Database url.
-    schema_overrides: dict, optional.
-        Override schema with dictionary of column : `polars` type.
 
     Returns
     -------
@@ -45,10 +46,16 @@ def read_database(
             )
         else:
             engine = create_engine(url)
+    if query is None:
+        if table_name is None:
+            raise ValueError(
+                'Either `query` or `table_name` has to be user-defined.'
+            )
+        query=f'SELECT * FROM {table_name}'  # noqa: S608
     return pl.read_database(
-        query=f'SELECT * FROM {table_name}',  # noqa: S608
+        query=query,
         connection=engine,
-        schema_overrides=schema_overrides,
+        schema_overrides=schema,
     )
 
 
@@ -120,7 +127,7 @@ def delete_known_books(
     """Delete known books."""
     if df_db is None:
         df_db = read_database(
-            table_name=table_name,
+            query=f'SELECT isbn FROM {table_name}',  # noqa: S608
             engine=engine,
             url=url,
         )
