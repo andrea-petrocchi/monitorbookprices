@@ -110,3 +110,22 @@ def write_database(
     )
 
 
+def delete_known_books(
+    new_books,
+    df_db=None,
+    table_name='books',
+    engine=None,
+    url=None,
+):
+    """Delete known books."""
+    if df_db is None:
+        df_db = read_database(
+            table_name=table_name,
+            engine=engine,
+            url=url,
+        )
+    return new_books.join(
+        df_db,
+        on='isbn',
+        how='anti',
+    )
