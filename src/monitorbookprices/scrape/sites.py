@@ -35,6 +35,7 @@ def list_sites_links():
         'https://www.ibs.it/',
         'https://www.libraccio.it/',
         'https://www.mondadoristore.it/',
+        'https://books.mondadoristore.it/',
         'https://www.osiander.de/',
     ]
 
