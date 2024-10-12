@@ -4,7 +4,7 @@ from pathlib import Path
 
 import polars as pl
 
-import monitorbookprices as mbp
+from monitorbookprices.scrape.sites import list_sites as list_supported_sites
 
 
 def create_excel_template(
@@ -45,7 +45,7 @@ def schema():
         'publisher': pl.String,
         'full_price': pl.Float64,
     }
-    for site in mbp.list_sites():
+    for site in list_supported_sites():
         out[site] = pl.String
     return out
 

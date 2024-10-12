@@ -6,7 +6,7 @@ from datetime import datetime
 import polars as pl
 from tqdm import tqdm
 
-from .sites import list_sites, scrape_url
+from monitorbookprices.scrape.sites import list_sites, scrape_url
 
 
 def scrape_database(books_df, date=datetime.today().date(), parallel=True):
