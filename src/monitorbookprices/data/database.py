@@ -53,7 +53,12 @@ def read_database(
 
 
 def write_database(
-    df, table_name, engine=None, url=None, if_table_exists='append'
+    df,
+    table_name,
+    engine=None,
+    url=None,
+    if_table_exists='append',
+    modify_df_before_writing=None,
 ):
     """Write database.
 
@@ -76,6 +81,8 @@ def write_database(
         Specifies behavior for already existing tables. See
         the `polars.DataFrame.write_database <https://docs.pola.rs/api/python/stable/reference/api/polars.DataFrame.write_database.html#polars.DataFrame.write_database>`_
         options for more details.
+    modify_df_before_writing: function
+        Function to apply before writing to database.
 
     Raises
     ------
@@ -90,8 +97,16 @@ def write_database(
             )
         else:
             engine = create_engine(url)
+    if modify_df_before_writing is not None:
+        df = modify_df_before_writing(
+            df=df,
+            engine=engine,
+            table_name=table_name,
+        )
     df.write_database(
         table_name=table_name,
         connection=engine,
         if_table_exists=if_table_exists,
     )
+
+

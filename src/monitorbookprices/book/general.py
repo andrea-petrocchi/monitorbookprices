@@ -11,7 +11,7 @@ def create_excel_template(
     fname=Path('template.xlsx').absolute(),
 ):
     """Create template for adding new books."""
-    df = pl.DataFrame(schema=schema)
+    df = pl.DataFrame(schema=schema())
     df.write_excel(fname)
 
 
