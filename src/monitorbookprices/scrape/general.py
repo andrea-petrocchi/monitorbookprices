@@ -32,9 +32,10 @@ def prepare_scrape(books_df):
         list_site_i = book.select(pl.col(list_sites()))[
             [s.name for s in book[list_sites()] if not s.null_count()]
         ]
-        for site in list_site_i:
-            list_isbn.append(book['isbn'][0])
-            list_site.append(site[0])
+        if list_site_i.shape[0] > 0:
+            for site in list_site_i:
+                list_isbn.append(book['isbn'][0])
+                list_site.append(site[0])
     return list_isbn, list_site
 
 
