@@ -6,13 +6,14 @@ from datetime import datetime
 import polars as pl
 from tqdm import tqdm
 
-from monitorbookprices.scrape.sites import list_sites, scrape_url
+from monitorbookprices.scrape.sites import list_sites, list_sites_links_short, scrape_url
 
 
 def scrape_database(books_df, date=datetime.today().date(), parallel=True):
     """Scrape database."""
-    list_isbn, list_site = prepare_scrape(books_df)
-    list_price = scrape_list(list_site, parallel=parallel)
+    list_isbn, list_link = prepare_scrape(books_df)
+    list_price = scrape_list(list_link, parallel=parallel)
+    list_site = from_list_link_to_list_site(list_link)
     list_date = [date] * len(list_price)
     return pl.DataFrame(
         {
@@ -51,3 +52,18 @@ def scrape_list(list_site, parallel=True):
         for site in tqdm(list_site):
             list_price.append(scrape_url(site))
     return list_price
+
+
+def from_list_link_to_list_site(list_link):
+    """Derive `list_site` from `list_link`."""
+    dd = dict(zip(
+        list_sites_links_short(),
+        list_sites()
+    ))
+    list_site = []
+    for link in list_link:
+        for sl in dd.keys():
+            if sl in link:
+                list_site.append(dd[sl])
+                break
+    return list_site

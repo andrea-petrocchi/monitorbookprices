@@ -1,16 +1,19 @@
 """Extract prices."""
 
+from shutil import which
+
 import requests
 from bs4 import BeautifulSoup
 from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException
+
+# from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.firefox.service import Service
 
 firefox_options = Options()
 firefox_options.add_argument('--headless')  # Run in headless mode
-firefox_service = Service()
+firefox_service = Service(which('geckodriver'))
 
 
 def list_sites():
@@ -23,6 +26,18 @@ def list_sites():
         'libraccio',
         'mondadori',
         'osiander',
+    ]
+
+
+def list_sites_links_short():
+    return [
+        'adelphi.it',
+        'buecher.de',
+        'lafeltrinelli.it',
+        'ibs.it',
+        'libraccio.it',
+        'mondadoristore.it',
+        'osiander.de',
     ]
 
 
@@ -61,78 +76,87 @@ def scrape_url(url):
 
 def scrape_adelphi(url):
     """Scraping function for adelphi.it."""
-    res = requests.get(url, timeout=10)
+    res = requests.get(url, timeout=20)
     soup = BeautifulSoup(res.content, 'lxml')
-    content = soup.find('div', {'class', 'book-impressum-price'})
-    price = content.find('span', {'class', 'sale'})
-    out = clean_up_price(price.text.strip())
-    return out
+    try:
+        price = soup.find('div', {'class', 'book-impressum-price'})\
+            .find('span', {'class', 'sale'})
+    except AttributeError:
+        return
+    if price is not None:
+        return clean_up_price(price.text.strip())
 
 
 def scrape_buecher(url):
     """Scraping function for buecher.de."""
-    res = requests.get(url, timeout=10)
+    res = requests.get(url, timeout=20)
     soup = BeautifulSoup(res.content, 'lxml')
     price = soup.find('div', {'class', 'clearfix price-shipping-free'})
-    out = clean_up_price(price.text.strip())
-    return out
+    if price is not None:
+        return clean_up_price(price.text.strip())
 
 
 def scrape_feltrinelli_and_ibs(url):
     """Scraping function for lafeltrinelli.it and ibs.it."""
-    res = requests.get(url, timeout=10)
+    res = requests.get(url, timeout=20)
     soup = BeautifulSoup(res.content, 'lxml')
-    main_box = soup.find('div', {'class': 'cc-pdp-main'})
-    content = main_box.find('div', {'class': 'cc-content-price'})
-    price = content.find('span', {'class': 'cc-price'})
-    out = clean_up_price(price.text.strip())
-    return out
+    try:
+        price = soup.find('div', {'class': 'cc-pdp-main'})\
+            .find('div', {'class': 'cc-content-price'})\
+            .find('span', {'class': 'cc-price'})
+    except AttributeError:
+        return
+    if price is not None:
+        return clean_up_price(price.text.strip())
 
 
 def scrape_libraccio(url):
     """Scraping function for libraccio.it."""
-    res = requests.get(url, timeout=10)
+    res = requests.get(url, timeout=20)
     soup = BeautifulSoup(res.content, 'lxml')
-    main_content = soup.find('div', {'class': 'maincontent'})
-    price = main_content.find('span', {'class': 'currentprice'})
-    out = clean_up_price(price.text.strip())
-    return out
+    try:
+        price = soup.find('div', {'class': 'maincontent'})\
+            .find('span', {'class': 'currentprice'})
+    except AttributeError:
+        return
+    if price is not None:
+        return clean_up_price(price.text.strip())
 
 
 def scrape_mondadori(url):
     """Scraping function for mondadoristore.it."""
-    res = requests.get(url, timeout=10)
+    res = requests.get(url, timeout=20)
     soup = BeautifulSoup(res.content, 'lxml')
     price = soup.find('span', {'class', 'new-price new-detail-price'})
-    out = clean_up_price(price.text)
-    return out
+    if price is not None:
+        return clean_up_price(price.text)
 
 
 def scrape_osiander(url):
     """Scraping function for osiander.de."""
-    try:
-        driver = webdriver.Firefox(
-            # service=Service('./geckodriver'),
-            # executable_path='./geckodriver',
-            options=firefox_options
-        )
+    with webdriver.Firefox(options=firefox_options) as driver:
         driver.get(url)
-        try:
-            price = driver.find_element(
-                By.CLASS_NAME, 'streichpreisdarstellung'
-            ).text.splitlines()[0]
-        except NoSuchElementException:
-            price = [
+        li=driver.find_elements(
+            By.CLASS_NAME,
+            'streichpreisdarstellung'
+        )
+        if len(li) > 0: # a discount on the book is found
+            price = li[0].text.splitlines()[0]
+            return clean_up_price(price)
+        else: # book not on discount
+            prices = [
                 ee.text.splitlines()[0]
                 for ee in driver.find_elements(
                     By.CLASS_NAME, 'element-headline-medium'
                 )
+                if len(ee.text)>0
                 if '€' in ee.text
-            ][0]
-        driver.quit()
-        return clean_up_price(price)
-    except NoSuchElementException:
-        return
+            ]
+            if len(prices) > 0:
+                return clean_up_price(prices[0])
+            else:
+                # TODO: Add log for failed scrape
+                return
 
 
 def clean_up_price(ss):
@@ -143,10 +167,11 @@ def clean_up_price(ss):
     :returns: price float
     :rtype: float
     """
-    return float(
-        ss.replace('\n', '')
-        .replace('\xa0', '')
-        .replace('€', '')
-        .replace(',', '.')
-        .strip()
-    )
+    if len(ss) > 0:
+        return float(
+            ss.replace('\n', '')
+            .replace('\xa0', '')
+            .replace('€', '')
+            .replace(',', '.')
+            .strip()
+        )
