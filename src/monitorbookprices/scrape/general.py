@@ -48,6 +48,6 @@ def scrape_list(list_site, parallel=True):
             )
     else:
         list_price = []
-        for site in list_site:
+        for site in tqdm(list_site):
             list_price.append(scrape_url(site))
     return list_price
