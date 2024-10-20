@@ -44,10 +44,22 @@ def schema():
         'year': pl.String,
         'publisher': pl.String,
         'full_price': pl.Float64,
+        'min_price': pl.Float64,
     }
     for site in list_supported_sites():
         out[site] = pl.String
     return out
+
+
+def schema_prices():
+    """Return supported schema for the prices table."""
+    return {
+        'isbn': pl.String,
+        'price': pl.Float64,
+        'site': pl.String,
+        'date': pl.Datetime,
+    }
+
 
 def book_info():
     """Return book info entries."""
@@ -58,4 +70,5 @@ def book_info():
         'year',
         'publisher',
         'full_price',
+        'min_price',
     ]
