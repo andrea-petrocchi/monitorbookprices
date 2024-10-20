@@ -2,11 +2,9 @@
 
 from pathlib import Path
 
-import polars as pl
-import pytest
-from polars.testing import assert_frame_equal
-
 import monitorbookprices as mbp
+import polars as pl
+from polars.testing import assert_frame_equal
 
 
 def get_simple_df():
@@ -19,6 +17,7 @@ def get_simple_df():
             'year': '2009',
             'publisher': 'Anaconda',
             'full_price': 7.95,
+            'min_price': 7.95,
             'buecher': 'https://www.buecher.de/artikel/buch/das-kapital/25646129/',
             'osiander': 'https://www.osiander.de/shop/home/artikeldetails/A1006759980',
         }
@@ -30,7 +29,7 @@ def get_simple_df():
 def test_sqldb():
     """Test SQL databases."""
     df_1 = get_simple_df()
-    sqldb_path = Path(__file__).parent/'data/test_dataframes/database.db'
+    sqldb_path = Path(__file__).parent / 'data/test_dataframes/database.db'
     df_2 = mbp.read_database(
         table_name='books',
         url=f'sqlite:///{sqldb_path}',
@@ -42,9 +41,8 @@ def test_sqldb():
 def test_excel():
     """Test excel files."""
     df_1 = get_simple_df()
-    sqlexcel_path = Path(__file__).parent/'data/test_dataframes/database.xlsx'
-    df_2 = mbp.read_excel(
-        sqlexcel_path,
-        schema=mbp.schema()
+    sqlexcel_path = (
+        Path(__file__).parent / 'data/test_dataframes/database.xlsx'
     )
+    df_2 = mbp.read_excel(sqlexcel_path, schema=mbp.schema())
     assert_frame_equal(df_1, df_2)
