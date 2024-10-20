@@ -1,31 +1,30 @@
 """Prices functions."""
 
 import polars as pl
-
 from monitorbookprices.book.general import schema as get_schema_default
 from monitorbookprices.data.database import read_database, write_database
 
 
 def update_min(books_df, prices_df):
     """Update min in table books."""
-    mapping={}
+    mapping = {}
     for book in books_df.iter_slices(1):
         isbn = book['isbn'][0]
-        prs = prices_df.filter(pl.col('isbn')==isbn)
+        prs = prices_df.filter(pl.col('isbn') == isbn)
         mm = prs.min()['price'][0]
         min_price = book['min_price'][0]
         if mm is None:
             # list_min_price.append(min_price)
-            mapping[isbn]=min_price
+            mapping[isbn] = min_price
         elif min_price is None:
             # list_min_price.append(mm)
-            mapping[isbn]=mm
+            mapping[isbn] = mm
         elif mm < min_price:
             # list_min_price.append(mm)
-            mapping[isbn]=mm
+            mapping[isbn] = mm
         elif min_price <= mm:
             # list_min_price.append(min_price)
-            mapping[isbn]=min_price
+            mapping[isbn] = min_price
         else:
             print('What?')
     return books_df.with_columns(
@@ -62,5 +61,5 @@ def update_min_whole_database(
         table_name=books_table,
         engine=engine,
         url=url,
-        if_table_exists='replace'
+        if_table_exists='replace',
     )

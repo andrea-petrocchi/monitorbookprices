@@ -4,13 +4,12 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 
 import polars as pl
-from tqdm import tqdm
-
 from monitorbookprices.scrape.sites import (
     list_sites,
     list_sites_links_short,
     scrape_url,
 )
+from tqdm import tqdm
 
 
 def scrape_database(books_df, date=datetime.today().date(), parallel=True):
@@ -60,10 +59,7 @@ def scrape_list(list_site, parallel=True):
 
 def from_list_link_to_list_site(list_link):
     """Derive `list_site` from `list_link`."""
-    dd = dict(zip(
-        list_sites_links_short(),
-        list_sites()
-    ))
+    dd = dict(zip(list_sites_links_short(), list_sites()))
     list_site = []
     for link in list_link:
         for sl in dd.keys():

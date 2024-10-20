@@ -1,9 +1,8 @@
 """Data - Database functions."""
 
 import polars as pl
-from sqlalchemy import create_engine
-
 from monitorbookprices.book.general import schema as get_schema_default
+from sqlalchemy import create_engine
 
 
 def read_database(
@@ -51,7 +50,7 @@ def read_database(
             raise ValueError(
                 'Either `query` or `table_name` has to be user-defined.'
             )
-        query=f'SELECT * FROM {table_name}'  # noqa: S608
+        query = f'SELECT * FROM {table_name}'  # noqa: S608
     return pl.read_database(
         query=query,
         connection=engine,

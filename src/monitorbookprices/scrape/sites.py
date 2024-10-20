@@ -30,6 +30,7 @@ def list_sites():
 
 
 def list_sites_links_short():
+    """Return list of supported webiste, short version."""
     return [
         'adelphi.it',
         'buecher.de',
@@ -79,8 +80,9 @@ def scrape_adelphi(url):
     res = requests.get(url, timeout=20)
     soup = BeautifulSoup(res.content, 'lxml')
     try:
-        price = soup.find('div', {'class', 'book-impressum-price'})\
-            .find('span', {'class', 'sale'})
+        price = soup.find('div', {'class', 'book-impressum-price'}).find(
+            'span', {'class', 'sale'}
+        )
     except AttributeError:
         return
     if price is not None:
@@ -101,9 +103,11 @@ def scrape_feltrinelli_and_ibs(url):
     res = requests.get(url, timeout=20)
     soup = BeautifulSoup(res.content, 'lxml')
     try:
-        price = soup.find('div', {'class': 'cc-pdp-main'})\
-            .find('div', {'class': 'cc-content-price'})\
+        price = (
+            soup.find('div', {'class': 'cc-pdp-main'})
+            .find('div', {'class': 'cc-content-price'})
             .find('span', {'class': 'cc-price'})
+        )
     except AttributeError:
         return
     if price is not None:
@@ -115,8 +119,9 @@ def scrape_libraccio(url):
     res = requests.get(url, timeout=20)
     soup = BeautifulSoup(res.content, 'lxml')
     try:
-        price = soup.find('div', {'class': 'maincontent'})\
-            .find('span', {'class': 'currentprice'})
+        price = soup.find('div', {'class': 'maincontent'}).find(
+            'span', {'class': 'currentprice'}
+        )
     except AttributeError:
         return
     if price is not None:
@@ -136,20 +141,17 @@ def scrape_osiander(url):
     """Scraping function for osiander.de."""
     with webdriver.Firefox(options=firefox_options) as driver:
         driver.get(url)
-        li=driver.find_elements(
-            By.CLASS_NAME,
-            'streichpreisdarstellung'
-        )
-        if len(li) > 0: # a discount on the book is found
+        li = driver.find_elements(By.CLASS_NAME, 'streichpreisdarstellung')
+        if len(li) > 0:  # a discount on the book is found
             price = li[0].text.splitlines()[0]
             return clean_up_price(price)
-        else: # book not on discount
+        else:  # book not on discount
             prices = [
                 ee.text.splitlines()[0]
                 for ee in driver.find_elements(
                     By.CLASS_NAME, 'element-headline-medium'
                 )
-                if len(ee.text)>0
+                if len(ee.text) > 0
                 if '€' in ee.text
             ]
             if len(prices) > 0:

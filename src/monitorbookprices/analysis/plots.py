@@ -1,7 +1,7 @@
 """Functions for plotting."""
 
 import holoviews as hv
-import hvplot.polars
+import hvplot.polars  # noqa: F401
 import polars as pl
 
 
@@ -15,10 +15,10 @@ def plot_history(
 ):
     """Plot history of recent price recordings."""
     if site is not None:
-        df = df.filter(pl.col('site')==site)
+        df = df.filter(pl.col('site') == site)
     plo = df.hvplot.line(
-        x="date",
-        y="price",
+        x='date',
+        y='price',
         by='site',
         title=title,
         height=height,
@@ -34,4 +34,3 @@ def plot_history(
         )
         plo *= line
     return plo
-
