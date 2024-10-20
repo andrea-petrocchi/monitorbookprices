@@ -33,6 +33,12 @@ dependencies = [
 Source = "https://github.com/andrea-petrocchi/monitorbookprices"
 Issues = "https://github.com/andrea-petrocchi/monitorbookprices/issues"
 
+[project.optional-dependencies]
+pre-commit = [
+    "pre-commit",
+    "ruff",
+]
+
 [tool.ruff]
 target-version = "py37"
 line-length = 79

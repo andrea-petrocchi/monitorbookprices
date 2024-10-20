@@ -30,6 +30,21 @@ pip install -e .
 
 
 
+# Pre-commits
+```shell
+pip install .[pre-commit,testing]  # install extra dependencies. For zsh use .'[pre-commit,testing]'
+pre-commit install  # install pre-commit hooks
+```
+
+
+
+# Tests
+```shell
+pytest -v # discover and run all tests
+```
+
+
+
 # Supported websites:
 - [adelphi](https://www.adelphi.it/)
 - [buecher](https://www.buecher.de/)
