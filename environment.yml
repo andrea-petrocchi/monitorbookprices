@@ -6,6 +6,7 @@ channels:
 
 dependencies:
   - beautifulsoup4
+  - bokeh
   - fastexcel
   - hvplot
   - ipykernel

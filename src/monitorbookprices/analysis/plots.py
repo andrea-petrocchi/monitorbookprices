@@ -4,6 +4,8 @@ import holoviews as hv
 import hvplot.polars  # noqa: F401
 import polars as pl
 
+hv.extension('bokeh')
+
 
 def plot_history(
     df,
