@@ -4,10 +4,17 @@ Monitor book prices for some italian, english, and german online bookshops.
 
 
 # Installation
-```bash
-pip install .
+We recommend using the provided environment `environment.yml` to set up a Python environment using [mamba](https://mamba.readthedocs.io/en/latest/installation/mamba-installation.html) environment with the necessary dependencies.
+Once the environment is installed, one need to activate it before using it (i.e., before running python scripts and notebooks).
+This is done via
+```shell
+mamba activate monitor
 ```
 
+Run the following command to install the package (after having activated the environment):
+```shell
+pip install .
+```
 
 
 ## `geckodriver`
@@ -24,7 +31,7 @@ We summarize here the steps to install GeckoDriver:
 
 
 # Development
-```bash
+```shell
 pip install -e .
 ```
 

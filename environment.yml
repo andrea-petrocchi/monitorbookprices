@@ -1,0 +1,23 @@
+name: monitor
+
+channels:
+  - conda-forge
+  - nodefaults
+
+dependencies:
+  - beautifulsoup4
+  - fastexcel
+  - hvplot
+  - ipykernel
+  - lxml
+  - openpyxl
+  - pip
+  - polars
+  - pytest
+  - python < 3.13.0
+  - pyarrow
+  - ruff
+  - selenium
+  - SQLAlchemy
+  - xlsx2csv
+  - xlsxwriter

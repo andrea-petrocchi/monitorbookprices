@@ -11,19 +11,19 @@ authors = [
 ]
 readme = "README.md"
 license = {file="LICENSE"}
-requires-python = ">=3.7"
+requires-python = ">=3.7,<3.13"
 dependencies = [
-    "bokeh",
+    "beautifulsoup4",
     "fastexcel",
     "hvplot",
     "ipykernel",
     "lxml",
     "openpyxl",
-    "pandas",
-    "panel",
     "polars",
     "pytest",
+    "pyarrow",
     "ruff",
+    "selenium",
     "SQLAlchemy",
     "xlsx2csv",
     "xlsxwriter",
