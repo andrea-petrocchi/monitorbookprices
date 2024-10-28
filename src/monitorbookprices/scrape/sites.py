@@ -135,6 +135,12 @@ def scrape_mondadori(url):
     price = soup.find('span', {'class', 'new-price new-detail-price'})
     if price is not None:
         return clean_up_price(price.text)
+    with webdriver.Firefox(options=firefox_options) as driver:
+        driver.get(url)
+        li = driver.find_elements(By.CLASS_NAME, 'new-detail-price')
+        if len(li) > 0:
+            price = li[0].text.splitlines()[0]
+            return clean_up_price(price)
 
 
 def scrape_osiander(url):
