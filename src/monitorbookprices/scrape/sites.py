@@ -15,6 +15,8 @@ firefox_options = Options()
 firefox_options.add_argument('--headless')  # Run in headless mode
 firefox_service = Service(which('geckodriver'))
 
+headers = {'User-Agent': 'Dottor Professor Truffatore Imbroglione'}
+
 
 def list_sites():
     """Return names of supported websites."""
@@ -77,8 +79,8 @@ def scrape_url(url):
 
 def scrape_adelphi(url):
     """Scraping function for adelphi.it."""
-    res = requests.get(url, timeout=20)
-    soup = BeautifulSoup(res.content, 'lxml')
+    with requests.get(url, timeout=30) as res:
+        soup = BeautifulSoup(res.content, 'lxml')
     try:
         price = soup.find('div', {'class', 'book-impressum-price'}).find(
             'span', {'class', 'sale'}
@@ -91,8 +93,8 @@ def scrape_adelphi(url):
 
 def scrape_buecher(url):
     """Scraping function for buecher.de."""
-    res = requests.get(url, timeout=20)
-    soup = BeautifulSoup(res.content, 'lxml')
+    with requests.get(url, timeout=30) as res:
+        soup = BeautifulSoup(res.content, 'lxml')
     price = soup.find('div', {'class', 'clearfix price-shipping-free'})
     if price is not None:
         return clean_up_price(price.text.strip())
@@ -100,8 +102,8 @@ def scrape_buecher(url):
 
 def scrape_feltrinelli_and_ibs(url):
     """Scraping function for lafeltrinelli.it and ibs.it."""
-    res = requests.get(url, timeout=20)
-    soup = BeautifulSoup(res.content, 'lxml')
+    with requests.get(url, timeout=30) as res:
+        soup = BeautifulSoup(res.content, 'lxml')
     try:
         price = (
             soup.find('div', {'class': 'cc-pdp-main'})
@@ -116,8 +118,8 @@ def scrape_feltrinelli_and_ibs(url):
 
 def scrape_libraccio(url):
     """Scraping function for libraccio.it."""
-    res = requests.get(url, timeout=20)
-    soup = BeautifulSoup(res.content, 'lxml')
+    with requests.get(url, timeout=30) as res:
+        soup = BeautifulSoup(res.content, 'lxml')
     try:
         price = soup.find('div', {'class': 'maincontent'}).find(
             'span', {'class': 'currentprice'}
@@ -130,17 +132,11 @@ def scrape_libraccio(url):
 
 def scrape_mondadori(url):
     """Scraping function for mondadoristore.it."""
-    res = requests.get(url, timeout=20)
-    soup = BeautifulSoup(res.content, 'lxml')
+    with requests.get(url, headers=headers, timeout=30) as res:
+        soup = BeautifulSoup(res.content, 'lxml')
     price = soup.find('span', {'class', 'new-price new-detail-price'})
     if price is not None:
         return clean_up_price(price.text)
-    with webdriver.Firefox(options=firefox_options) as driver:
-        driver.get(url)
-        li = driver.find_elements(By.CLASS_NAME, 'new-detail-price')
-        if len(li) > 0:
-            price = li[0].text.splitlines()[0]
-            return clean_up_price(price)
 
 
 def scrape_osiander(url):
