@@ -1,6 +1,7 @@
 """Prices functions."""
 
 import polars as pl
+
 from monitorbookprices.book.general import schema as get_schema_default
 from monitorbookprices.data.database import read_database, write_database
 

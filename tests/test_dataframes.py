@@ -2,9 +2,10 @@
 
 from pathlib import Path
 
-import monitorbookprices as mbp
 import polars as pl
 from polars.testing import assert_frame_equal
+
+import monitorbookprices as mbp
 
 
 def get_simple_df():

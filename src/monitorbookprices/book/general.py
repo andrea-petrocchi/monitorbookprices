@@ -3,6 +3,7 @@
 from pathlib import Path
 
 import polars as pl
+
 from monitorbookprices.scrape.sites import list_sites as list_supported_sites
 
 

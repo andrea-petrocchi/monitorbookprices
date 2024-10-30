@@ -1,8 +1,9 @@
 """Data - Database functions."""
 
 import polars as pl
-from monitorbookprices.book.general import schema as get_schema_default
 from sqlalchemy import create_engine
+
+from monitorbookprices.book.general import schema as get_schema_default
 
 
 def read_database(
