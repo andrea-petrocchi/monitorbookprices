@@ -62,7 +62,7 @@ def plot_history(
             if type(hline) is dict:
                 try:
                     plo *= horizontal_line(
-                        hline['X_A'], hline['X_B'], hline['Y'], hline['label']
+                        **hline,
                     )
                 except ValueError:
                     raise ValueError('Wrong format hline.')
