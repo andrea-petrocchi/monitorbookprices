@@ -136,3 +136,48 @@ def delete_known_books(
         on='isbn',
         how='anti',
     )
+
+
+def find_book(
+    text,
+    df_db=None,
+    table_name='books',
+    engine=None,
+    url=None,
+):
+    """Find a book from a piece of text.
+
+    The text can come from any string column in the database.
+    Note that the match is case-insensitive.
+    """
+    if df_db is None:
+        df_db = read_database(
+            table_name=table_name,
+            engine=engine,
+            url=url,
+        )
+    return df_db.filter(
+        pl.any_horizontal(pl.col(pl.String).str.contains('(?i)' + text))
+    )
+
+
+def wipe_book(
+    isbn,
+    engine=None,
+    url=None,
+):
+    """Wipe book from database."""
+    for table_name in ['books', 'prices']:
+        df = read_database(
+            table_name=table_name,
+            engine=engine,
+            url=url,
+        )
+        to_delete = df.filter(pl.col('isbn') == isbn)
+        write_database(
+            df.join(to_delete, on='isbn', how='anti'),
+            table_name,
+            engine=engine,
+            url=url,
+            if_table_exists='replace',
+        )

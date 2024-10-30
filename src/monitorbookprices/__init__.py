@@ -10,7 +10,13 @@ from .book.general import (
     schema,
     schema_prices,
 )
-from .data.database import delete_known_books, read_database, write_database
+from .data.database import (
+    delete_known_books,
+    find_book,
+    read_database,
+    wipe_book,
+    write_database,
+)
 from .data.excel import read_excel, write_excel
 from .scrape.general import prepare_scrape, scrape_database, scrape_list
 from .scrape.sites import list_sites, list_sites_links, scrape_url
@@ -20,6 +26,7 @@ __all__ = [
     'create_excel_template',
     'delete_known_books',
     'fill_book_schema',
+    'find_book',
     'list_sites',
     'list_sites_links',
     'new_book',
@@ -34,6 +41,7 @@ __all__ = [
     'scrape_url',
     'update_min',
     'update_min_whole_database',
+    'wipe_book',
     'write_database',
     'write_excel',
 ]
