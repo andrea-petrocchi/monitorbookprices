@@ -123,7 +123,7 @@ def scrape_libraccio(url):
     with requests.get(url, timeout=30) as res:
         soup = BeautifulSoup(res.content, 'lxml')
     try:
-        price = soup.find('div', {'class': 'maincontent'}).find(
+        price = soup.find('div', {'class': 'buybox'}).find(
             'span', {'class': 'currentprice'}
         )
     except AttributeError:
