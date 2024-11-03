@@ -104,7 +104,8 @@ def scrape_feltrinelli_and_ibs(url):
     """Scraping function for lafeltrinelli.it and ibs.it."""
     with requests.get(url, timeout=30) as res:
         soup = BeautifulSoup(res.content, 'lxml')
-    if soup.find('span', {'cc-top-title-label'}).text == 'LIBRO USATO':
+    title_label = soup.find('span', {'cc-top-title-label'})
+    if title_label is None or title_label.text == 'LIBRO USATO':
         return
     try:
         price = (
