@@ -26,6 +26,7 @@ def list_sites():
         'feltrinelli',
         'ibs',
         'libraccio',
+        'libuni',
         'mondadori',
         'osiander',
     ]
@@ -39,6 +40,7 @@ def list_sites_links_short():
         'lafeltrinelli.it',
         'ibs.it',
         'libraccio.it',
+        'libreriauniversitaria.it',
         'mondadoristore.it',
         'osiander.de',
     ]
@@ -52,6 +54,7 @@ def list_sites_links():
         'https://www.lafeltrinelli.it/',
         'https://www.ibs.it/',
         'https://www.libraccio.it/',
+        'https://www.libreriauniversitaria.it/',
         'https://www.mondadoristore.it/',
         'https://books.mondadoristore.it/',
         'https://www.osiander.de/',
@@ -71,6 +74,8 @@ def scrape_url(url):
         return scrape_feltrinelli_and_ibs(url)
     if 'libraccio' in url:
         return scrape_libraccio(url)
+    if 'libreriauniversitaria' in url:
+        return scrape_libuni(url)
     if 'mondadori' in url:
         return scrape_mondadori(url)
     if 'osiander' in url:
@@ -129,6 +134,17 @@ def scrape_libraccio(url):
         )
     except AttributeError:
         return
+    if price is not None:
+        return clean_up_price(price.text.strip())
+
+
+def scrape_libuni(url):
+    """Scraping function for libreriauniversitaria.it."""
+    with requests.get(url, timeout=30) as res:
+        soup = BeautifulSoup(res.content, 'lxml')
+    if 'Prodotto momentaneamente non disponibile' in soup.text:
+        return
+    price = soup.find('span', {'class', 'current-price'})
     if price is not None:
         return clean_up_price(price.text.strip())
 
