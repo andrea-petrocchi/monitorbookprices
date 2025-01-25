@@ -144,6 +144,8 @@ def scrape_libuni(url):
         soup = BeautifulSoup(res.content, 'lxml')
     if 'Prodotto momentaneamente non disponibile' in soup.text:
         return
+    if 'Fuori catalogo' in soup.text:
+        return
     price = soup.find('span', {'class', 'current-price'})
     if price is not None:
         return clean_up_price(price.text.strip())
