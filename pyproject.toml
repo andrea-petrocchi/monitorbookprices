@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "monitorbookprices"
-version = "1.0.0"
+version = "1.1.0"
 description = "Monitor book prices for some italian, english, and german online bookshops."
 authors = [
     {name = "Andrea Petrocchi", email = "andrea.petrocchi@mpsd.mpg.de"},

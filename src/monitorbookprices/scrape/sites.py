@@ -29,6 +29,7 @@ def list_sites():
         'libuni',
         'mondadori',
         'osiander',
+        'rizzoli',
     ]
 
 
@@ -43,6 +44,7 @@ def list_sites_links_short():
         'libreriauniversitaria.it',
         'mondadoristore.it',
         'osiander.de',
+        'libreriarizzoli.it',
     ]
 
 
@@ -58,6 +60,7 @@ def list_sites_links():
         'https://www.mondadoristore.it/',
         'https://books.mondadoristore.it/',
         'https://www.osiander.de/',
+        'https://www.libreriarizzoli.it/',
     ]
 
 
@@ -80,6 +83,8 @@ def scrape_url(url):
         return scrape_mondadori(url)
     if 'osiander' in url:
         return scrape_osiander(url)
+    if 'rizzoli' in url:
+        return scrape_rizzoli(url)
 
 
 def scrape_adelphi(url):
@@ -182,6 +187,15 @@ def scrape_osiander(url):
             else:
                 # TODO: Add log for failed scrape
                 return
+
+
+def scrape_rizzoli(url):
+    """Scraping function for libreriarizzoli.it."""
+    with requests.get(url, headers=headers, timeout=30) as res:
+        soup = BeautifulSoup(res.content, 'lxml')
+    price = soup.find('span', {'class', 'price-value'})
+    if price is not None:
+        return clean_up_price(price.text)
 
 
 def clean_up_price(ss):
