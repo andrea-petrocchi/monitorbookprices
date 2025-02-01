@@ -21,9 +21,7 @@ dependencies = [
     "lxml",
     "openpyxl",
     "polars",
-    "pytest",
     "pyarrow",
-    "ruff",
     "selenium",
     "SQLAlchemy",
     "xlsx2csv",
@@ -38,6 +36,9 @@ Issues = "https://github.com/andrea-petrocchi/monitorbookprices/issues"
 pre-commit = [
     "pre-commit",
     "ruff",
+]
+test = [
+    "pytest",
 ]
 
 [tool.ruff]
