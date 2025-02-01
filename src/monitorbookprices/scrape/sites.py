@@ -25,6 +25,7 @@ def list_sites():
         'buecher',
         'feltrinelli',
         'ibs',
+        'libcoop',
         'libraccio',
         'libuni',
         'mondadori',
@@ -40,6 +41,7 @@ def list_sites_links_short():
         'buecher.de',
         'lafeltrinelli.it',
         'ibs.it',
+        'librerie.coop',
         'libraccio.it',
         'libreriauniversitaria.it',
         'mondadoristore.it',
@@ -55,6 +57,7 @@ def list_sites_links():
         'https://www.buecher.de/',
         'https://www.lafeltrinelli.it/',
         'https://www.ibs.it/',
+        'https://www.librerie.coop/',
         'https://www.libraccio.it/',
         'https://www.libreriauniversitaria.it/',
         'https://www.mondadoristore.it/',
@@ -75,6 +78,8 @@ def scrape_url(url):
         return scrape_buecher(url)
     if 'feltrinelli' in url or 'ibs' in url:
         return scrape_feltrinelli_and_ibs(url)
+    if 'librerie.coop' in url:
+        return scrape_libcoop(url)
     if 'libraccio' in url:
         return scrape_libraccio(url)
     if 'libreriauniversitaria' in url:
@@ -127,6 +132,19 @@ def scrape_feltrinelli_and_ibs(url):
         return
     if price is not None:
         return clean_up_price(price.text.strip())
+
+
+def scrape_libcoop(url):
+    """Scraping function for librerie.coop."""
+    with requests.get(url, headers=headers, timeout=30) as res:
+        soup = BeautifulSoup(res.content, 'lxml')
+    btn_disabled = soup.find('button', {'class', 'btn btn-disabled'})
+    if btn_disabled is not None:
+        if 'NON DISPONIBILE' in btn_disabled.text:
+            return
+    price = soup.find('span', {'class', 'current-price'})
+    if price is not None:
+        return clean_up_price(price.text)
 
 
 def scrape_libraccio(url):
