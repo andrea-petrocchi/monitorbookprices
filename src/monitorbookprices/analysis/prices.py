@@ -10,10 +10,10 @@ def update_min(books_df, prices_df):
     """Update min in table books."""
     mapping = {}
     for book in books_df.iter_slices(1):
-        isbn = book['isbn'][0]
-        prs = prices_df.filter(pl.col('isbn') == isbn)
-        mm = prs.min()['price'][0]
-        min_price = book['min_price'][0]
+        isbn = book["isbn"][0]
+        prs = prices_df.filter(pl.col("isbn") == isbn)
+        mm = prs.min()["price"][0]
+        min_price = book["min_price"][0]
         if mm is None:
             # list_min_price.append(min_price)
             mapping[isbn] = min_price
@@ -27,15 +27,13 @@ def update_min(books_df, prices_df):
             # list_min_price.append(min_price)
             mapping[isbn] = min_price
         else:
-            print('What?')
-    return books_df.with_columns(
-        min_price=pl.col('isbn').replace_strict(mapping)
-    )
+            print("What?")
+    return books_df.with_columns(min_price=pl.col("isbn").replace_strict(mapping))
 
 
 def update_min_whole_database(
-    books_table='books',
-    prices_table='prices',
+    books_table="books",
+    prices_table="prices",
     engine=None,
     url=None,
 ):
@@ -62,5 +60,5 @@ def update_min_whole_database(
         table_name=books_table,
         engine=engine,
         url=url,
-        if_table_exists='replace',
+        if_table_exists="replace",
     )

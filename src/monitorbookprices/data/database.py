@@ -41,17 +41,13 @@ def read_database(
     """
     if engine is None:
         if url is None:
-            raise ValueError(
-                'Either `engine` or `url` has to be user-defined.'
-            )
+            raise ValueError("Either `engine` or `url` has to be user-defined.")
         else:
             engine = create_engine(url)
     if query is None:
         if table_name is None:
-            raise ValueError(
-                'Either `query` or `table_name` has to be user-defined.'
-            )
-        query = f'SELECT * FROM {table_name}'  # noqa: S608
+            raise ValueError("Either `query` or `table_name` has to be user-defined.")
+        query = f"SELECT * FROM {table_name}"  # noqa: S608
     return pl.read_database(
         query=query,
         connection=engine,
@@ -64,7 +60,7 @@ def write_database(
     table_name,
     engine=None,
     url=None,
-    if_table_exists='append',
+    if_table_exists="append",
     modify_df_before_writing=None,
 ):
     """Write database.
@@ -99,9 +95,7 @@ def write_database(
     """
     if engine is None:
         if url is None:
-            raise ValueError(
-                'Either `engine` or `url` has to be user-defined.'
-            )
+            raise ValueError("Either `engine` or `url` has to be user-defined.")
         else:
             engine = create_engine(url)
     if modify_df_before_writing is not None:
@@ -120,28 +114,28 @@ def write_database(
 def delete_known_books(
     df,
     df_db=None,
-    table_name='books',
+    table_name="books",
     engine=None,
     url=None,
 ):
     """Delete known books."""
     if df_db is None:
         df_db = read_database(
-            query=f'SELECT isbn FROM {table_name}',  # noqa: S608
+            query=f"SELECT isbn FROM {table_name}",  # noqa: S608
             engine=engine,
             url=url,
         )
     return df.join(
         df_db,
-        on='isbn',
-        how='anti',
+        on="isbn",
+        how="anti",
     )
 
 
 def find_book(
     text,
     df_db=None,
-    table_name='books',
+    table_name="books",
     engine=None,
     url=None,
 ):
@@ -157,7 +151,7 @@ def find_book(
             url=url,
         )
     return df_db.filter(
-        pl.any_horizontal(pl.col(pl.String).str.contains('(?i)' + text))
+        pl.any_horizontal(pl.col(pl.String).str.contains("(?i)" + text))
     )
 
 
@@ -167,17 +161,17 @@ def wipe_book(
     url=None,
 ):
     """Wipe book from database."""
-    for table_name in ['books', 'prices']:
+    for table_name in ["books", "prices"]:
         df = read_database(
             table_name=table_name,
             engine=engine,
             url=url,
         )
-        to_delete = df.filter(pl.col('isbn') == isbn)
+        to_delete = df.filter(pl.col("isbn") == isbn)
         write_database(
-            df.join(to_delete, on='isbn', how='anti'),
+            df.join(to_delete, on="isbn", how="anti"),
             table_name,
             engine=engine,
             url=url,
-            if_table_exists='replace',
+            if_table_exists="replace",
         )

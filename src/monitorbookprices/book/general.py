@@ -8,7 +8,7 @@ from monitorbookprices.scrape.sites import list_sites as list_supported_sites
 
 
 def create_excel_template(
-    fname=Path('template.xlsx').absolute(),
+    fname=Path("template.xlsx").absolute(),
 ):
     """Create template for adding new books."""
     df = pl.DataFrame(schema=schema())
@@ -23,8 +23,8 @@ def new_book(book):
     book: dict
         Book dictionary.
     """
-    if 'isbn' not in book or len(book['isbn']) != 13:
-        raise ValueError('ISBN missing or wrong format.')
+    if "isbn" not in book or len(book["isbn"]) != 13:
+        raise ValueError("ISBN missing or wrong format.")
     book = fill_book_schema(**book)
     return book
 
@@ -38,13 +38,13 @@ def fill_book_schema(**kwargs):
 def schema():
     """Return supported schema."""
     out = {
-        'isbn': pl.String,
-        'author': pl.String,
-        'title': pl.String,
-        'year': pl.String,
-        'publisher': pl.String,
-        'full_price': pl.Float64,
-        'min_price': pl.Float64,
+        "isbn": pl.String,
+        "author": pl.String,
+        "title": pl.String,
+        "year": pl.String,
+        "publisher": pl.String,
+        "full_price": pl.Float64,
+        "min_price": pl.Float64,
     }
     for site in list_supported_sites():
         out[site] = pl.String
@@ -54,21 +54,21 @@ def schema():
 def schema_prices():
     """Return supported schema for the prices table."""
     return {
-        'isbn': pl.String,
-        'price': pl.Float64,
-        'site': pl.String,
-        'date': pl.Datetime,
+        "isbn": pl.String,
+        "price": pl.Float64,
+        "site": pl.String,
+        "date": pl.Datetime,
     }
 
 
 def book_info():
     """Return book info entries."""
     return [
-        'isbn',
-        'author',
-        'title',
-        'year',
-        'publisher',
-        'full_price',
-        'min_price',
+        "isbn",
+        "author",
+        "title",
+        "year",
+        "publisher",
+        "full_price",
+        "min_price",
     ]

@@ -21,10 +21,10 @@ def scrape_database(books_df, date=datetime.today().date(), parallel=True):
     list_date = [date] * len(list_price)
     return pl.DataFrame(
         {
-            'isbn': list_isbn,
-            'site': list_site,
-            'price': list_price,
-            'date': list_date,
+            "isbn": list_isbn,
+            "site": list_site,
+            "price": list_price,
+            "date": list_date,
         }
     )
 
@@ -39,7 +39,7 @@ def prepare_scrape(books_df):
         ]
         if list_site_i.shape[0] > 0:
             for site in list_site_i:
-                list_isbn.append(book['isbn'][0])
+                list_isbn.append(book["isbn"][0])
                 list_site.append(site[0])
     return list_isbn, list_site
 

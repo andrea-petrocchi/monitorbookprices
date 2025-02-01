@@ -17,17 +17,17 @@ def test_schema():
 
 def test_isbn():
     """Test checks on isbn."""
-    book_1 = {'isbn': 'bad_isbn'}
+    book_1 = {"isbn": "bad_isbn"}
     with pytest.raises(ValueError):
         mbp.new_book(book_1)
-    book_2 = {'title': 'no_isbn'}
+    book_2 = {"title": "no_isbn"}
     with pytest.raises(ValueError):
         mbp.new_book(book_2)
 
 
 def test_fill():
     """Test filling function."""
-    book = {'isbn': '1234567890123'}
+    book = {"isbn": "1234567890123"}
     book_filled_1 = mbp.new_book(book)
     schema = mbp.schema()
     assert all([x in book_filled_1.keys() for x in schema])
