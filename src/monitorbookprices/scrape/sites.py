@@ -24,6 +24,7 @@ def list_sites():
         "adelphi",
         "buecher",
         "feltrinelli",
+        "hoepli",
         "ibs",
         "libcoop",
         "libraccio",
@@ -40,6 +41,7 @@ def list_sites_links_short():
         "adelphi.it",
         "buecher.de",
         "lafeltrinelli.it",
+        "hoepli.it",
         "ibs.it",
         "librerie.coop",
         "libraccio.it",
@@ -56,6 +58,7 @@ def list_sites_links():
         "https://www.adelphi.it/",
         "https://www.buecher.de/",
         "https://www.lafeltrinelli.it/",
+        "https://www.hoepli.it/",
         "https://www.ibs.it/",
         "https://www.librerie.coop/",
         "https://www.libraccio.it/",
@@ -78,6 +81,8 @@ def scrape_url(url):
         return scrape_buecher(url)
     if "feltrinelli" in url or "ibs" in url:
         return scrape_feltrinelli_and_ibs(url)
+    if "hoepli" in url:
+        return scrape_hoepli(url)
     if "librerie.coop" in url:
         return scrape_libcoop(url)
     if "libraccio" in url:
@@ -132,6 +137,19 @@ def scrape_feltrinelli_and_ibs(url):
         return
     if price is not None:
         return clean_up_price(price.text.strip())
+
+
+def scrape_hoepli(url):
+    """Scraping function for hoepli.it."""
+    with requests.get(url, headers=headers, timeout=30) as res:
+        soup = BeautifulSoup(res.content, "lxml")
+    non_disponibile = soup.find("span", {"class", "disponibilita_Z"})
+    if non_disponibile is not None and "Non disponibile" in non_disponibile.text:
+        return
+    price = soup.find("div", {"class", "prezzo"})
+    price = price.find("span")
+    if price is not None:
+        return clean_up_price(price.text)
 
 
 def scrape_libcoop(url):
