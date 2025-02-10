@@ -25,6 +25,7 @@ def list_sites():
         "buecher",
         "feltrinelli",
         "hoepli",
+        "hugendubel",
         "ibs",
         "libcoop",
         "libraccio",
@@ -42,6 +43,7 @@ def list_sites_links_short():
         "buecher.de",
         "lafeltrinelli.it",
         "hoepli.it",
+        "hugendubel.de",
         "ibs.it",
         "librerie.coop",
         "libraccio.it",
@@ -59,6 +61,7 @@ def list_sites_links():
         "https://www.buecher.de/",
         "https://www.lafeltrinelli.it/",
         "https://www.hoepli.it/",
+        "https://www.hugendubel.de/",
         "https://www.ibs.it/",
         "https://www.librerie.coop/",
         "https://www.libraccio.it/",
@@ -83,6 +86,8 @@ def scrape_url(url):
         return scrape_feltrinelli_and_ibs(url)
     if "hoepli" in url:
         return scrape_hoepli(url)
+    if "hugendubel" in url:
+        return scrape_hugendubel(url)
     if "librerie.coop" in url:
         return scrape_libcoop(url)
     if "libraccio" in url:
@@ -148,6 +153,16 @@ def scrape_hoepli(url):
         return
     price = soup.find("div", {"class", "prezzo"})
     price = price.find("span")
+    if price is not None:
+        return clean_up_price(price.text)
+
+
+def scrape_hugendubel(url):
+    """Scrape price from hugendubel.de."""
+    with requests.get(url, timeout=30) as res:
+        soup = BeautifulSoup(res.content, "lxml")
+    price = soup.find("div", {"class", "current-price"})
+    price = price.find("span", {"class", "price"})
     if price is not None:
         return clean_up_price(price.text)
 
