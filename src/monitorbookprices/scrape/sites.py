@@ -103,7 +103,7 @@ def scrape_url(url):
 
 
 def scrape_adelphi(url):
-    """Scraping function for adelphi.it."""
+    """Scrape price from adelphi.it."""
     with requests.get(url, timeout=30) as res:
         soup = BeautifulSoup(res.content, "lxml")
     try:
@@ -117,7 +117,7 @@ def scrape_adelphi(url):
 
 
 def scrape_buecher(url):
-    """Scraping function for buecher.de."""
+    """Scrape price from buecher.de."""
     with requests.get(url, timeout=30) as res:
         soup = BeautifulSoup(res.content, "lxml")
     price = soup.find("div", {"class", "clearfix price-shipping-free"})
@@ -126,7 +126,7 @@ def scrape_buecher(url):
 
 
 def scrape_feltrinelli_and_ibs(url):
-    """Scraping function for lafeltrinelli.it and ibs.it."""
+    """Scrape price from lafeltrinelli.it and ibs.it."""
     with requests.get(url, timeout=30) as res:
         soup = BeautifulSoup(res.content, "lxml")
     title_label = soup.find("span", {"cc-top-title-label"})
@@ -145,7 +145,7 @@ def scrape_feltrinelli_and_ibs(url):
 
 
 def scrape_hoepli(url):
-    """Scraping function for hoepli.it."""
+    """Scrape price from hoepli.it."""
     with requests.get(url, headers=headers, timeout=30) as res:
         soup = BeautifulSoup(res.content, "lxml")
     non_disponibile = soup.find("span", {"class", "disponibilita_Z"})
@@ -168,7 +168,7 @@ def scrape_hugendubel(url):
 
 
 def scrape_libcoop(url):
-    """Scraping function for librerie.coop."""
+    """Scrape price from librerie.coop."""
     with requests.get(url, headers=headers, timeout=30) as res:
         soup = BeautifulSoup(res.content, "lxml")
     btn_disabled = soup.find("button", {"class", "btn btn-disabled"})
@@ -181,7 +181,7 @@ def scrape_libcoop(url):
 
 
 def scrape_libraccio(url):
-    """Scraping function for libraccio.it."""
+    """Scrape price from libraccio.it."""
     with requests.get(url, timeout=30) as res:
         soup = BeautifulSoup(res.content, "lxml")
     try:
@@ -195,7 +195,7 @@ def scrape_libraccio(url):
 
 
 def scrape_libuni(url):
-    """Scraping function for libreriauniversitaria.it."""
+    """Scrape price from libreriauniversitaria.it."""
     with requests.get(url, timeout=30) as res:
         soup = BeautifulSoup(res.content, "lxml")
     if "Prodotto momentaneamente non disponibile" in soup.text:
@@ -208,7 +208,7 @@ def scrape_libuni(url):
 
 
 def scrape_mondadori(url):
-    """Scraping function for mondadoristore.it."""
+    """Scrape price from mondadoristore.it."""
     with requests.get(url, headers=headers, timeout=30) as res:
         soup = BeautifulSoup(res.content, "lxml")
     price = soup.find("span", {"class", "new-price new-detail-price"})
@@ -217,7 +217,7 @@ def scrape_mondadori(url):
 
 
 def scrape_osiander(url):
-    """Scraping function for osiander.de."""
+    """Scrape price from osiander.de."""
     with webdriver.Firefox(options=firefox_options) as driver:
         driver.get(url)
         li = driver.find_elements(By.CLASS_NAME, "streichpreisdarstellung")
@@ -239,7 +239,7 @@ def scrape_osiander(url):
 
 
 def scrape_rizzoli(url):
-    """Scraping function for libreriarizzoli.it."""
+    """Scrape price from libreriarizzoli.it."""
     with requests.get(url, headers=headers, timeout=30) as res:
         soup = BeautifulSoup(res.content, "lxml")
     price = soup.find("span", {"class", "price-value"})
