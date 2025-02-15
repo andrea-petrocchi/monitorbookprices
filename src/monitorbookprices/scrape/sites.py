@@ -172,8 +172,10 @@ def scrape_libcoop(url):
     with requests.get(url, headers=headers, timeout=30) as res:
         soup = BeautifulSoup(res.content, "lxml")
     btn_disabled = soup.find("button", {"class", "btn btn-disabled"})
-    if btn_disabled is not None:
-        if "NON DISPONIBILE" in btn_disabled.text:
+    btn_disabled_2 = soup.find("button", {"class", "btn btn-disabled mt-2"})
+    if btn_disabled or btn_disabled_2:
+        msg = btn_disabled if btn_disabled else btn_disabled_2
+        if "NON DISPONIBILE" in msg.text:
             return
     price = soup.find("span", {"class", "current-price"})
     if price is not None:
